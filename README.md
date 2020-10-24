@@ -1,2 +1,0 @@
-# EPAM Python Online Course
-
