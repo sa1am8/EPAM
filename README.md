@@ -1,2 +1,1 @@
-# EPAM Python Online Course
-
+Graduation work
