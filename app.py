@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 @app.before_request
 def init_db():
-    g.db = sqlite3.connect('db.sqlite3')
+    g.db = sqlite3.connect('sql/db.sqlite3')
 
 
 @app.after_request
@@ -67,7 +67,7 @@ def delete(id_):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    db = sqlite3.connect('db.sqlite3')
+    db = sqlite3.connect('sql/db.sqlite3')
     cursor = db.execute(
         "select name, body from blog order by id desc"
     )
