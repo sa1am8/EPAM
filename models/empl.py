@@ -95,7 +95,7 @@ def search_employees():
     """Search employees by date of birth."""
     form = SearchForm()
     if form.validate_on_submit():
-        employees = Employee.query\
+        employees = Employee.query \
             .filter(form.from_date.data <= Employee.date_of_birth,
                     Employee.date_of_birth <= form.to_date.data).all()
         return render_template("html/employees.html", employees=employees,

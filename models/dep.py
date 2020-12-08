@@ -1,9 +1,8 @@
 from flask import render_template, Blueprint, url_for, redirect, request, flash
 from sqlalchemy.exc import IntegrityError
-from models.models import Employee, Department
+from models import Employee, Department
 from app.app import db
 from forms.forms import DepartmentForm
-
 
 dep = Blueprint("dep", __name__)
 

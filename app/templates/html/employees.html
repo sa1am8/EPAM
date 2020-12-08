@@ -1,0 +1,36 @@
+{% extends "html/index.html" %}
+{% block nav_right %}
+  <a class="nav-item nav-link" href="{{ url_for('emp.search_employees') }}">Search employees</a>
+  <a class="nav-item nav-link" href="{{ url_for('emp.add_employee') }}">New employee</a>
+{% endblock %}
+{% block content %}
+  <div class="content-section">
+    <h1>Employees</h1>
+    {% if not employees %}
+      <p>No results</p>
+    {% else %}
+      <table class="table table-striped">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Date of Birth</th>
+            <th scope="col">Salary</th>
+            <th scope="col">Department</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for employee in employees %}
+            <tr>
+              <td><a href="{{ url_for('emp.show_employee', employee_id=employee.id) }}">{{ employee.name }}</a></td>
+              <td>{{ employee.date_of_birth }}</td>
+              <td>{{ employee.salary }}</td>
+              <td>{{ employee.department.name }}</td>
+              <td><a class="btn btn-secondary btn-sm" href="{{ url_for('emp.update_employee', employee_id=employee.id) }}">Update</a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+  </div>
+{% endblock %}
