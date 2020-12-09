@@ -23,6 +23,8 @@ ma = Marshmallow(app)
 
 
 if __name__ == '__main__':
+    import sys
+    sys.path.insert(1, '/home/toshka/PycharmProjects/EPAM linux/EPAM')
     from models.empl import emp
     from models.models import *
     from main import main

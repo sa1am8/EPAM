@@ -1,6 +1,6 @@
 from flask import render_template, Blueprint, url_for, redirect, request, flash
 from models.models import Employee
-from app.app import db
+from app import db
 from forms.forms import EmployeeForm, SearchForm
 from datetime import datetime
 
