@@ -10,10 +10,10 @@ class Employee(db.Model):
     # as is the name of the model
     __tablename__ = 'employees'
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     salary = db.Column(db.Integer, index=True)
     name = db.Column(db.String(60), index=True, unique=True)
-    date_of_birth = db.Column(db.DateTime(60), index=True)
+    date_of_birth = db.Column(db.Date, index=True)
 
     department_id = db.Column(db.Integer, db.ForeignKey('departments.id'))
 
@@ -28,7 +28,7 @@ class Department(db.Model):
 
     __tablename__ = 'departments'
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(60), unique=True)
     description = db.Column(db.String(200))
     employees = db.relationship('Employee', backref='department',

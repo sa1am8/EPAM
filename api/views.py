@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from models.models import Employee, Department
 from app import db
+import datetime
 import sys
 sys.path.insert(1, '/home/toshka/PycharmProjects/EPAM linux/EPAM/api')
 from layout import *
@@ -30,6 +31,10 @@ def api_add_employee():
     # Get attributes for an employee from json.
     name = request.json["name"]
     date_of_birth = request.json["date_of_birth"]
+    print(int(date_of_birth.split('/')[0]))
+    date_of_birth = datetime.date(int(date_of_birth.split('/')[2]),
+                                  int(date_of_birth.split('/')[1]),
+                                  int(date_of_birth.split('/')[0]))
     salary = request.json["salary"]
     department_id = request.json["department_id"]
     # Create a new employee with received values.
@@ -98,9 +103,8 @@ def api_add_department():
     """Add a new department."""
     # Get name from json.
     name = request.json["name"]
-    id = db.session.get(last_id)
     # Create department with name from json.
-    new_department = Department(name=name, id=id)
+    new_department = Department(name=name)
     db.session.add(new_department)
     db.session.commit()
 
