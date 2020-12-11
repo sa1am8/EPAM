@@ -98,8 +98,9 @@ def api_add_department():
     """Add a new department."""
     # Get name from json.
     name = request.json["name"]
+    id = db.session.get(last_id)
     # Create department with name from json.
-    new_department = Department(name=name)
+    new_department = Department(name=name, id=id)
     db.session.add(new_department)
     db.session.commit()
 

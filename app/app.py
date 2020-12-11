@@ -35,3 +35,5 @@ if __name__ == '__main__':
     app.register_blueprint(emp)
     app.register_blueprint(dep)
     app.register_blueprint(api)
+
+    app.run(debug=True)
