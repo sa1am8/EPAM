@@ -5,7 +5,7 @@ from flask_migrate import Migrate, MigrateCommand
 import os
 import sys
 sys.path.insert(1, '/home/toshka/PycharmProjects/EPAM linux/EPAM')
-from config.config import Config
+from instance.config import Config
 from flask_script import Manager
 
 project_root = os.path.dirname(__file__)

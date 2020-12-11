@@ -1,4 +1,4 @@
-from app.app import ma
+from app import ma
 
 
 class EmployeeSchema(ma.Schema):

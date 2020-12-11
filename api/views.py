@@ -1,7 +1,9 @@
 from flask import Blueprint, request, jsonify
 from models.models import Employee, Department
-from app.app import db
-from api.layout import *
+from app import db
+import sys
+sys.path.insert(1, '/home/toshka/PycharmProjects/EPAM linux/EPAM/api')
+from layout import *
 
 
 api = Blueprint("api", __name__)
