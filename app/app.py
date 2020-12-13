@@ -22,7 +22,7 @@ manager.add_command('db', MigrateCommand)
 ma = Marshmallow(app)
 
 
-if __name__ == '__main__':
+if __name__ == '__main__' or __name__ == 'flask_test.py':
     import sys
     sys.path.insert(1, '/home/toshka/PycharmProjects/EPAM linux/EPAM')
     from models.empl import emp
