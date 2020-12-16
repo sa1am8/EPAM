@@ -8,36 +8,22 @@ from app.app import app, db
 
 
 class TestCase(unittest.TestCase):
+
     def setUp(self):
         basedir = Config()
-        app.config['TESTING'] = True
-        app.config['CSRF_ENABLED'] = False
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir.basedir, 'test.db')
         self.app = app.test_client()
+
+        from main import main
+        from models.dep import dep
+        from api.views import api
+        from models.empl import emp
+
+        self.app.register_blueprint(main)
+        self.app.register_blueprint(emp)
+        self.app.register_blueprint(dep)
+        self.app.register_blueprint(api)
         print(self.app.get('/'))
-        db.create_all()
-
-    def create_app(name, config=None):
-
-        app = Flask(name)
-        if isinstance(config, typing.Mapping):
-            try:
-                validate_config(config)
-            except ValueError:
-                pass
-            else:
-                app.config.from_mapping(config)
-
-        if name.lower().startswith('test'):
-            app.config['TESTING'] = True
-
-        app.db = create_db()
-        app.auth_checker = AuthChecker(app.db)
-
-        return app
-    def tearDown(self):
-        db.session.remove()
-        db.drop_all()
 
     def views_add_department(self, name):
         return self.app.post('/api/department', json=dict(
@@ -100,12 +86,9 @@ class TestCase(unittest.TestCase):
     def views_delete_employee(self, id):
         return self.app.delete('/api/employee/' + str(id))
 
-
-
     def test_views_employee(self):
         rv = self.views_add_employee('Anton', '11/11/11', 100, 1)
         assert b'Employee has been added!' in rv.data
-
 
 
 if __name__ == '__main__':

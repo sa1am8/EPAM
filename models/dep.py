@@ -112,8 +112,8 @@ def delete_department(department_id):
     except IntegrityError:
         # If department has employees handle an exception.
         flash("Department that has employees cannot be deleted!", "danger")
-        return redirect(url_for("dep.show_departments"))
+        return render_template(url_for("dep.show_departments"))
     else:
         # Redirect to departments page with success message.
         flash("Department has been deleted!", "success")
-        return redirect(url_for("dep.show_departments"))
+        return render_template(url_for("dep.show_departments"))
