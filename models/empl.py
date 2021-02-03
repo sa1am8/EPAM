@@ -43,7 +43,6 @@ def add_employee():
 def show_employee(employee_id):
     """Render page of an employee with a given id"""
     employee = Employee.query.get_or_404(employee_id)
-
     return render_template(
         "html/employee.html", title=employee.name, employee=employee
     )

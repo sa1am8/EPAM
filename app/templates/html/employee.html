@@ -5,8 +5,8 @@
 {% endblock %}
 {% block content %}
   <div class="content-section">
-    <h1>Employees</h1>
-    {% if not employees %}
+    <h1>Employee</h1>
+    {% if not employee %}
       <p>No results</p>
     {% else %}
       <table class="table table-striped">
@@ -20,7 +20,6 @@
           </tr>
         </thead>
         <tbody>
-          {% for employee in employees %}
             <tr>
               <td><a href="{{ url_for('emp.show_employee', employee_id=employee.id) }}">{{ employee.name }}</a></td>
               <td>{{ employee.date_of_birth }}</td>
@@ -28,7 +27,6 @@
               <td>{{ employee.department.name }}</td>
               <td><a class="btn btn-secondary btn-sm" href="{{ url_for('emp.update_employee', employee_id=employee.id) }}">Update</a></td>
             </tr>
-          {% endfor %}
         </tbody>
       </table>
     {% endif %}
