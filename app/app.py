@@ -27,13 +27,17 @@ if __name__ == '__main__':
     sys.path.insert(1, '/home/toshka/PycharmProjects/EPAM linux/EPAM')
     from models.empl import emp
     from models.models import *
-    from main import main
     from models.dep import dep
+    from models.profile import profile
+    from main import main
     from api.views import api
+    from api.auth import auth
 
     app.register_blueprint(main)
-    app.register_blueprint(emp)
-    app.register_blueprint(dep)
+    #app.register_blueprint(emp)
+    #app.register_blueprint(dep)
     app.register_blueprint(api)
+    app.register_blueprint(auth)
+    app.register_blueprint(profile)
 
     app.run(debug=True)
