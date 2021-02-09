@@ -1,10 +1,10 @@
 {% extends "html/index.html" %}
 {% block content %}
   <div class="content-section">
+    <style>
+    h1   {margin-top: 5%}
+    </style>
     <h1>Homepage</h1>
     <h2>Welcome!!!</h2>
-    <p>Go to <a href="{{ url_for('dep.show_departments') }}">departments</a> to see a list of all current departments or go to
-    <a href="{{ url_for('emp.show_employees') }}">employees</a> to see a list of
-    all current employees.</p>
   </div>
 {% endblock %}

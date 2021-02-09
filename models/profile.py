@@ -1,12 +1,11 @@
 from flask import render_template, Blueprint, url_for, redirect, request, flash
-from models.models import Employee
 from app import db
-from forms.forms import EmployeeForm, SearchForm
-from datetime import datetime
+from flask_login import login_required, current_user
 
-profile = Blueprint("profile", __name__)
+prf = Blueprint("profile", __name__)
 
 
-@profile.route("/profile")
-def show_profile():
-    return render_template('/html/profile.html')
+@prf.route('/profile')
+@login_required
+def profile():
+    return render_template('html/profile.html', name=current_user.name)

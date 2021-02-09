@@ -8,6 +8,7 @@ sys.path.insert(1, '/home/toshka/PycharmProjects/EPAM linux/EPAM')
 from instance.config import Config
 from flask_script import Manager
 
+
 project_root = os.path.dirname(__file__)
 template_path = os.path.join(project_root, 'templates/')
 
@@ -28,16 +29,27 @@ if __name__ == '__main__':
     from models.empl import emp
     from models.models import *
     from models.dep import dep
-    from models.profile import profile
+    from models.profile import prf
     from main import main
     from api.views import api
     from api.auth import auth
+    from flask_login import LoginManager
+
+    db.init_app(app)
+
+    login_manager = LoginManager()
+    login_manager.login_view = 'auth.login'
+    login_manager.init_app(app)
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
 
     app.register_blueprint(main)
     #app.register_blueprint(emp)
     #app.register_blueprint(dep)
     app.register_blueprint(api)
     app.register_blueprint(auth)
-    app.register_blueprint(profile)
+    app.register_blueprint(prf)
 
     app.run(debug=True)
