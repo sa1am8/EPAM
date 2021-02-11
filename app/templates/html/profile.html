@@ -7,6 +7,32 @@
     </style>
     <h1 class="title">
       Welcome, {{ name }}!
+        {{ id }}
     </h1>
+  <div class="content-section">
+    <h1>User</h1>
+    {% if not   current_user.is_authenticated %}
+      <p>No results</p>
+    {% else %}
+      <table class="table table-striped">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Date of Birth</th>
+            <th scope="col">Rates</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+            <tr>
+              <td>{{ current_user.name }}</a></td>
+              {% for grade in current_user.grades %}
+              <td><a class="btn btn-secondary btn-sm" href="{{ url_for('emp.update_employee', employee_id=employee.id) }}">Update</a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+  </div>
 </div>
 {% endblock %}
