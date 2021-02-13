@@ -46,6 +46,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
     name = db.Column(db.String(1000))
+    grades = db.Column(db.PickleType)
 
     def __repr__(self):
         return '<Name: {}>'.format(self.name)
