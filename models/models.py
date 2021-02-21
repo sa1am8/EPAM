@@ -1,6 +1,9 @@
 from flask_login import UserMixin
 from app import db
 
+ROLE_USER = 0
+ROLE_ADMIN = 1
+
 
 class Employee(db.Model):
     """
@@ -42,11 +45,24 @@ class Department(db.Model):
 class User(UserMixin, db.Model):
     __tablename__ = 'profile'
 
-    id = db.Column(db.Integer, primary_key=True)  # primary keys are required by SQLAlchemy
+    id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100))
     name = db.Column(db.String(1000))
-    grades = db.Column(db.PickleType)
+    role = db.Column(db.SmallInteger, default=ROLE_USER)
 
     def __repr__(self):
         return '<Name: {}>'.format(self.name)
+
+
+class Grades(db.Model):
+    __tablename__ = "grades"
+
+    id = db.Column(db.Integer, primary_key=True)
+    object_id = db.Column(db.Integer, nullable=False, default=0)
+    user_id = db.Column(db.Integer, nullable=False)
+    grade_id = db.Column(db.Integer, nullable=False)
+    timestamp = db.Column(db.Integer, nullable=False)
+
+    def __repr__(self):
+        return '<Post %r>' % (self.id)

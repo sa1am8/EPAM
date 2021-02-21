@@ -1,13 +1,23 @@
 from flask import Blueprint, request, jsonify
-from models.models import Employee, Department
+from models.models import Employee, Department, Grades, User
+from flask_login import login_required, current_user
 from app import db
 import datetime
 import sys
+
 sys.path.insert(1, '/home/toshka/PycharmProjects/EPAM linux/EPAM/api')
 from layout import *
 
-
 api = Blueprint("api", __name__)
+
+
+@api.route("/api/profile", methods=["GET"])
+@login_required
+def get_grades_current_user():
+    #grades = Grades.query.order_by(Grades.user_id).all()
+    grades = Grades.query.filter_by(user_id=current_user.id).all()
+    results = grades_schema.dump(grades)
+    return jsonify(results)
 
 
 @api.route("/api/employee", methods=["GET"])
@@ -31,7 +41,6 @@ def api_add_employee():
     # Get attributes for an employee from json.
     name = request.json["name"]
     date_of_birth = request.json["date_of_birth"]
-    print(int(date_of_birth.split('/')[0]))
     date_of_birth = datetime.date(int(date_of_birth.split('/')[2]),
                                   int(date_of_birth.split('/')[1]),
                                   int(date_of_birth.split('/')[0]))

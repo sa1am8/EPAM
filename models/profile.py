@@ -10,3 +10,8 @@ prf = Blueprint("profile", __name__)
 @login_required
 def profile():
     return render_template('html/profile.html', current_user=current_user, name=current_user.name, id=current_user.id)
+
+@prf.route('/profile/grades')
+@login_required
+def show_grades():
+    return render_template('html/grades.html')
