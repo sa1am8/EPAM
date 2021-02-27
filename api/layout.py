@@ -41,3 +41,7 @@ class GradeSchema(ma.Schema):
 
 grade_schema = GradeSchema()
 grades_schema = GradeSchema(many=True)
+
+class ObjectSchema(ma.Schema):
+    class Meta:
+        fields = ("id", "name")

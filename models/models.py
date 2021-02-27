@@ -66,3 +66,9 @@ class Grades(db.Model):
 
     def __repr__(self):
         return '<Post %r>' % (self.id)
+
+class object_to_id(db.Model):
+    __tablename__ = "objtoid"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
