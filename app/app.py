@@ -4,10 +4,11 @@ from flask_marshmallow import Marshmallow
 from flask_migrate import Migrate, MigrateCommand
 import os
 import sys
+
 sys.path.insert(1, '/home/toshka/PycharmProjects/EPAM linux/EPAM')
 from instance.config import Config
 from flask_script import Manager
-
+from flask_login import LoginManager
 
 project_root = os.path.dirname(__file__)
 template_path = os.path.join(project_root, 'templates/')
@@ -22,9 +23,18 @@ manager = Manager(app)
 manager.add_command('db', MigrateCommand)
 ma = Marshmallow(app)
 
+login_manager = LoginManager()
+login_manager.login_view = 'auth.login'
+login_manager.init_app(app)
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 if __name__ == '__main__':
     import sys
+
     sys.path.insert(1, '/home/toshka/PycharmProjects/EPAM linux/EPAM')
     from models.empl import emp
     from models.models import *
@@ -37,17 +47,9 @@ if __name__ == '__main__':
 
     db.init_app(app)
 
-    login_manager = LoginManager()
-    login_manager.login_view = 'auth.login'
-    login_manager.init_app(app)
-
-    @login_manager.user_loader
-    def load_user(user_id):
-        return User.query.get(int(user_id))
-
     app.register_blueprint(main)
-    #app.register_blueprint(emp)
-    #app.register_blueprint(dep)
+    # app.register_blueprint(emp)
+    # app.register_blueprint(dep)
     app.register_blueprint(api)
     app.register_blueprint(auth)
     app.register_blueprint(prf)

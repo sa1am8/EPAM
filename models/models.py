@@ -1,15 +1,12 @@
 from flask_login import UserMixin
-from app import db
+from app import db, login_manager
+from flask_login import LoginManager, UserMixin
 
 ROLE_USER = 0
 ROLE_ADMIN = 1
 
 
 class Employee(db.Model):
-    """
-    Create an Employee table
-    """
-
     # Ensures table will be named in plural and not in singular
     # as is the name of the model
     __tablename__ = 'employees'
@@ -26,10 +23,6 @@ class Employee(db.Model):
 
 
 class Department(db.Model):
-    """
-    Create a Department table
-    """
-
     __tablename__ = 'departments'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -47,9 +40,15 @@ class User(UserMixin, db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(100), unique=True)
+    group = db.Column(db.String)
     password = db.Column(db.String(100))
     name = db.Column(db.String(1000))
-    role = db.Column(db.SmallInteger, default=ROLE_USER)
+    groups = db.Column(db.String)
+    role = db.Column(db.Integer, default=ROLE_USER)
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
 
     def __repr__(self):
         return '<Name: {}>'.format(self.name)
@@ -67,8 +66,9 @@ class Grades(db.Model):
     def __repr__(self):
         return '<Post %r>' % (self.id)
 
+
 class object_to_id(db.Model):
-    __tablename__ = "objtoid"
+    __tablename__ = "object_to_id"
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)

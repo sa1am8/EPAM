@@ -11,22 +11,21 @@ table{
 </style>
 <table class="table table-striped">
         <thead class="thead-dark">
-          <tr>
-
-            <th scope="col">Obj</th>
+        <tr>
+            <th scope="col">Id</th>
             {% for date in dates %}
               <th scope="col"> {{ date }} </th>
             {% endfor %}
-          </tr>
-          {% for object in names %}
-          <tr>
-            <th scope="col"> {{ object.name }}</th>
+        </tr>
+        {% set object = 6 %}
+        {% for user in users %}
+            <tr>
+            <th> {{ ids }}, {{ user }}</th>
             {% for time in timestamps %}
-                  <th scope="col"> {{rates.get(object.id, {}).get(time, '-')}}</th>
+                <th> {{ users.get(user, {}).get(object, {}).get(time, '-') }}</th>
             {% endfor %}
-          </tr>
-          {% endfor %}
-
+            </tr>
+        {% endfor %}
         </thead>
 </table>
 {% endblock %}

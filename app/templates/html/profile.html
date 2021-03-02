@@ -4,33 +4,49 @@
 <div class="content-section">
     <style>
     h1   {margin-top: 5%}
+
     </style>
     <h1 class="title">
-      Welcome, {{ name }}!
+        Welcome, {{ name }}!
     </h1>
-  <div class="content-section">
-    <h1>User</h1>
-    {% if not current_user.is_authenticated %}
-      <p>No results</p>
-    {% else %}
-      <table class="table table-striped">
-        <thead class="thead-dark">
-          <tr>
-            <th scope="col">id</th>
-            <th scope="col">name</th>
-            <th scope="col">Rates</th>
-            <th scope="col"></th>
-          </tr>
-        </thead>
-        <tbody>
+    {% if current_user.role == 0 %}
+    <div class="content-section">
+        <h1>User</h1>
+        <table class="table table-striped">
+            <thead class="thead-dark">
             <tr>
-              <td>{{ current_user.id }}</a></td>
-              <td>{{ current_user.name }}</a></td>
-              <td><a class="btn btn-secondary btn-sm" href="{{ url_for('profile.show_grades')}}">Get grades</a></td>
+                <th scope="col">Id</th>
+                <th scope="col">Name</th>
+                <th scope="col">Group</th>
+                <th scope="col">Rates</th>
             </tr>
-        </tbody>
-      </table>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{ current_user.id }}</a></td>
+                <td>{{ current_user.name }}</a></td>
+                <td><a>{{ current_user.group }}</a></td>
+                <td><a class="btn btn-secondary btn-sm" href="{{ url_for('profile.show_grades')}}">Get grades</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    {% elif current_user.role == 1%}
+    <table class="table table-striped">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Grades</th>
+        </tr>
+        {% for group in groups %}
+        <tr>
+            <th scope="col"> {{ group }}</th>
+            <th scope="col"> {{ group.quantity }}</th>
+            <th><a class="btn btn-secondary btn-sm" href="{{ url_for('profile.show_group', group_id=group)}}">Get grades</a></th>
+        </tr>
+        {% endfor %}
+    </table>
     {% endif %}
-  </div>
 </div>
 {% endblock %}

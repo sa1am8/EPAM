@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from models.models import Employee, Department, Grades, User
+from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_required, current_user
 from app import db
 import datetime
@@ -14,10 +15,39 @@ api = Blueprint("api", __name__)
 @api.route("/api/profile", methods=["GET"])
 @login_required
 def get_grades_current_user():
-    #grades = Grades.query.order_by(Grades.user_id).all()
     grades = Grades.query.filter_by(user_id=current_user.id).all()
     results = grades_schema.dump(grades)
     return jsonify(results)
+
+
+@api.route("/api/group/<int:group_id>", methods=["GET"])
+def get_group_members(group_id):
+    group = User.query.filter_by(group=group_id).all()
+    results = profiles_schema.dump(group)
+    return jsonify(results)
+
+
+@api.route('/api/user', methods=['POST'])
+def api_add_user():
+    email = request.json['email']
+    name = request.json['name']
+    password = request.json['password']
+    role = request.json['role'] if 'role' in request.json else 0
+    group = request.json['group'] if role == 0 else None
+    groups = request.json['groups'] if 'groups' in request.json else None
+
+    new_user = User(email=email,
+                     name=name,
+                     password=generate_password_hash(password, method='sha256'),
+                     role=role,
+                     group=group,
+                     groups=groups
+                     )
+
+    db.session.add(new_user)
+    db.session.commit()
+
+    return profile_schema.jsonify(new_user)
 
 
 @api.route("/api/employee", methods=["GET"])

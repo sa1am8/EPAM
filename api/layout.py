@@ -27,7 +27,7 @@ departments_schema = DepartmentSchema(many=True)
 
 class ProfileSchema(ma.Schema):
     class Meta:
-        fields = ("id", "name", "role", "grades")
+        fields = ("id", "name", "grades", "group")
 
 
 profile_schema = ProfileSchema()
@@ -42,6 +42,19 @@ class GradeSchema(ma.Schema):
 grade_schema = GradeSchema()
 grades_schema = GradeSchema(many=True)
 
+
+class AdminSchema(ma.Schema):
+    class Meta:
+        fields = ("id", "name", "groups")
+
+
+admin_schema = AdminSchema()
+admins_schema = AdminSchema(many=True)
+
+
 class ObjectSchema(ma.Schema):
     class Meta:
         fields = ("id", "name")
+
+object_schema = ObjectSchema()
+objects_schema = ObjectSchema(many=True)
