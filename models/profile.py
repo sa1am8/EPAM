@@ -55,7 +55,6 @@ def show_group(group_id):
         ids = [i['name'] for i in profiles]
         results = dict()
         for i in profiles:
-            #print(i['id'])
             grades = Grades.query.filter_by(user_id=i['id']).all()
             objects = grades_schema.dump(grades)
             grades = {object['object_id']: dict() for object in objects}
@@ -63,9 +62,9 @@ def show_group(group_id):
                 grades[object['object_id']][object['timestamp']] = object['grade_id'] \
                     if object['grade_id'] != 13 else 'Abs'
             results[i['id']] = grades
-        print(results)
-
+        objects = objects_schema.dump(object_to_id.query.all())
+        ids.reverse()
         return render_template('html/group.html', title=str(group_id) + ' group', users=results,
-                               dates=dates, timestamps=timestamps, ids=ids)
+                               dates=dates, timestamps=timestamps, ids=ids, objects=objects)
     else:
         return redirect(url_for('main.home'))

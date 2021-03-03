@@ -9,18 +9,30 @@ table{
     margin-left: -50%;
     }
 </style>
+<form id="objects" method="POST" action="">
+    <select id="object_list" style="margin-top : 5%; margin-left : -45%">
+        {% for object in objects %}
+            <option value="{{ object.name }}"> {{ object.name }} </option>
+        {% endfor %}
+    </select>
+</form>
+<script>
+    const ObjectName = document.getElementById("object_list");
+    document.write(ObjectName.options[ObjectName.selectedIndex].text);
+</script>
+
 <table class="table table-striped">
         <thead class="thead-dark">
+        {% set object = 6 %}
         <tr>
             <th scope="col">Id</th>
             {% for date in dates %}
               <th scope="col"> {{ date }} </th>
             {% endfor %}
         </tr>
-        {% set object = 6 %}
         {% for user in users %}
             <tr>
-            <th> {{ ids }}, {{ user }}</th>
+            <th> {{ ids.pop() }}</th>
             {% for time in timestamps %}
                 <th> {{ users.get(user, {}).get(object, {}).get(time, '-') }}</th>
             {% endfor %}
