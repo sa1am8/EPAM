@@ -46,9 +46,9 @@ def show_grades():
                            timestamps=timestamps, rates=rates, title='Grades')
 
 
-@prf.route("/profile/group/<int:group_id>", methods=["GET"])
+@prf.route("/profile/group/<int:group_id>/<string:objective>", methods=["GET", "POST"])
 @login_required
-def show_group(group_id):
+def show_group(group_id, objective):
     if current_user.role == 1:
         group = User.query.filter_by(group=group_id).all()
         profiles = profiles_schema.dump(group)
@@ -64,7 +64,11 @@ def show_group(group_id):
             results[i['id']] = grades
         objects = objects_schema.dump(object_to_id.query.all())
         ids.reverse()
+        for i in objects:
+            if i['name'].lower() == objective.lower():
+                objective = i['id']
+                break
         return render_template('html/group.html', title=str(group_id) + ' group', users=results,
-                               dates=dates, timestamps=timestamps, ids=ids, objects=objects)
+                               dates=dates, timestamps=timestamps, ids=ids, objects=objects, objective=objective)
     else:
         return redirect(url_for('main.home'))

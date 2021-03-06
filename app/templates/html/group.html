@@ -9,21 +9,19 @@ table{
     margin-left: -50%;
     }
 </style>
-<form id="objects" method="POST" action="">
-    <select id="object_list" style="margin-top : 5%; margin-left : -45%">
+<form id="objects" method="POST">
+    <select id="objects_list" style="margin-top : 5%; margin-left : -45%" onchange="document.location=this.options[this.selectedIndex].value">
+        <option id="select" value="select" disabled="" selected="">Please Select</option>
         {% for object in objects %}
             <option value="{{ object.name }}"> {{ object.name }} </option>
         {% endfor %}
     </select>
 </form>
-<script>
-    const ObjectName = document.getElementById("object_list");
-    document.write(ObjectName.options[ObjectName.selectedIndex].text);
-</script>
+
+
 
 <table class="table table-striped">
         <thead class="thead-dark">
-        {% set object = 6 %}
         <tr>
             <th scope="col">Id</th>
             {% for date in dates %}
@@ -34,7 +32,7 @@ table{
             <tr>
             <th> {{ ids.pop() }}</th>
             {% for time in timestamps %}
-                <th> {{ users.get(user, {}).get(object, {}).get(time, '-') }}</th>
+                <th> {{ users.get(user, {}).get(objective, {}).get(time, '-') }}</th>
             {% endfor %}
             </tr>
         {% endfor %}

@@ -43,7 +43,7 @@
         <tr>
             <th scope="col"> {{ group }}</th>
             <th scope="col"> {{ group.quantity }}</th>
-            <th><a class="btn btn-secondary btn-sm" href="{{ url_for('profile.show_group', group_id=group)}}">Get grades</a></th>
+            <th><a class="btn btn-secondary btn-sm" href="{{ url_for('profile.show_group', group_id=group, objective='algebra')}}">Get grades</a></th>
         </tr>
         {% endfor %}
     </table>
