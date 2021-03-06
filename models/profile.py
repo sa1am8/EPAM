@@ -46,7 +46,7 @@ def show_grades():
                            timestamps=timestamps, rates=rates, title='Grades')
 
 
-@prf.route("/profile/group/<int:group_id>/<string:objective>", methods=["GET", "POST"])
+@prf.route("/profile/group/<int:group_id>/<string:objective>", methods=["GET"])
 @login_required
 def show_group(group_id, objective):
     if current_user.role == 1:
@@ -68,7 +68,38 @@ def show_group(group_id, objective):
             if i['name'].lower() == objective.lower():
                 objective = i['id']
                 break
-        return render_template('html/group.html', title=str(group_id) + ' group', users=results,
+        return render_template('html/group.html', title=str(group_id) + ' group', users=results, group_id=group_id,
                                dates=dates, timestamps=timestamps, ids=ids, objects=objects, objective=objective)
+    else:
+        return redirect(url_for('main.home'))
+
+
+@prf.route("/profile/group/<int:group_id>/<string:objective>/change", methods=["GET", "POST"])
+@login_required
+def change_rates_group(group_id, objective):
+    if current_user.role == 1:
+        group = User.query.filter_by(group=group_id).all()
+        profiles = profiles_schema.dump(group)
+        ids = [i['name'] for i in profiles]
+        results = dict()
+        for i in profiles:
+            grades = Grades.query.filter_by(user_id=i['id']).all()
+            objects = grades_schema.dump(grades)
+            grades = {object['object_id']: dict() for object in objects}
+            for object in objects:
+                grades[object['object_id']][object['timestamp']] = object['grade_id'] \
+                    if object['grade_id'] != 13 else 'Abs'
+            results[i['id']] = grades
+        objects = objects_schema.dump(object_to_id.query.all())
+        ids.reverse()
+        for i in objects:
+            if i['name'].lower() == objective.lower():
+                objective = i['id']
+                break
+        print(results)
+        return render_template('html/group_changes.html', title=str(group_id) + ' group', users=results,
+                               group_id=group_id,
+                               dates=dates, timestamps=timestamps, ids=ids, objects=objects, objective=int(objective))
+
     else:
         return redirect(url_for('main.home'))

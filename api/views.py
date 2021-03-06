@@ -27,6 +27,31 @@ def get_group_members(group_id):
     return jsonify(results)
 
 
+@api.route("/api/group/<int:group_id>/<string:objective>", methods=["POST"])
+def update_group_rates(group_id, objective):
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    object_id = db.Column(db.Integer, nullable=False, default=0)
+    user_id = db.Column(db.Integer, nullable=False)
+    grade_id = db.Column(db.Integer, nullable=False)
+    timestamp = db.Column(db.Integer, nullable=False)"""
+    object_id = request.json['object_id']
+    user_id = request.json['user_id']
+    grade_id = request.json['grade_id']
+    timestamp = request.json['timestamp']
+
+    new_grade = Grades(object_id=object_id,
+                      user_id=user_id,
+                      grade_id=grade_id,
+                      timestamp=timestamp
+                      )
+
+    db.session.add(new_grade)
+    db.session.commit()
+
+    return profile_schema.jsonify(new_grade)
+
+
 @api.route('/api/user', methods=['POST'])
 def api_add_user():
     email = request.json['email']
@@ -37,12 +62,12 @@ def api_add_user():
     groups = request.json['groups'] if 'groups' in request.json else None
 
     new_user = User(email=email,
-                     name=name,
-                     password=generate_password_hash(password, method='sha256'),
-                     role=role,
-                     group=group,
-                     groups=groups
-                     )
+                    name=name,
+                    password=generate_password_hash(password, method='sha256'),
+                    role=role,
+                    group=group,
+                    groups=groups
+                    )
 
     db.session.add(new_user)
     db.session.commit()

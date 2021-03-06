@@ -1,7 +1,6 @@
 {% extends "/html/index.html" %}
 
 {% block content %}
-
 <style>
 table{
     margin-top : 5%;
@@ -18,9 +17,6 @@ table{
     </select>
 </form>
 
-<a class="btn btn-secondary btn-sm" href="{{ url_for('profile.change_rates_group', group_id=group_id, objective=objective)}}">Change</a>
-
-
 <table class="table table-striped">
         <thead class="thead-dark">
         <tr>
@@ -33,10 +29,13 @@ table{
             <tr>
             <th> {{ ids.pop() }}</th>
             {% for time in timestamps %}
-                <th> {{ users.get(user, {}).get(objective, {}).get(time, '-') }}</th>
+                <th> <input maxlength="3" size="1" type="text" value= "{{users.get(user, {}).get(objective, {}).get(time, '-')}}"></th>
             {% endfor %}
             </tr>
         {% endfor %}
         </thead>
 </table>
+
+<a class="btn btn-secondary btn-sm" href="{{url_for('api.update_group_rates', group_id=group_id, objective=objective)}}">Change</a>
+
 {% endblock %}
