@@ -17,6 +17,8 @@ table{
     </select>
 </form>
 
+<form method="POST" action="{{url}}">
+{% set _list = [] %}
 <table class="table table-striped">
         <thead class="thead-dark">
         <tr>
@@ -29,13 +31,25 @@ table{
             <tr>
             <th> {{ ids.pop() }}</th>
             {% for time in timestamps %}
-                <th> <input maxlength="3" size="1" type="text" value= "{{users.get(user, {}).get(objective, {}).get(time, '-')}}"></th>
+                <th> <input class="grade_input" name="grade_input" style="background-color : #d6d6d6" maxlength="3" size="1" type="text"
+                            value="{{users.get(user, {}).get(objective, {}).get(time, '-')}}"
+                            {{ _list.append(users.get(user, {}).get(objective, {}).get(time, '-')) }}
+                   onchange="" ></th>
             {% endfor %}
             </tr>
         {% endfor %}
         </thead>
 </table>
+<script>
+    var collection = document.getElementsByClassName('grade_input');
+    var i;
+    for (i = 0; i < collection.length; i++){
+        document.write(collection[i].value);
+    }
+</script>
+<h5>{{_list}}</h5>
 
-<a class="btn btn-secondary btn-sm" href="{{url_for('api.update_group_rates', group_id=group_id, objective=objective)}}">Change</a>
+<button class="btn btn-secondary btn-sm">Change</button>
+</form>
 
 {% endblock %}

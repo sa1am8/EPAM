@@ -74,7 +74,7 @@ def show_group(group_id, objective):
         return redirect(url_for('main.home'))
 
 
-@prf.route("/profile/group/<int:group_id>/<string:objective>/change", methods=["GET", "POST"])
+@prf.route("/profile/group/<int:group_id>/<string:objective>/change", methods=["GET"])
 @login_required
 def change_rates_group(group_id, objective):
     if current_user.role == 1:
@@ -96,10 +96,17 @@ def change_rates_group(group_id, objective):
             if i['name'].lower() == objective.lower():
                 objective = i['id']
                 break
-        print(results)
+        url = '/profile/group/{}/{}/change'.format(group_id, objective)
         return render_template('html/group_changes.html', title=str(group_id) + ' group', users=results,
-                               group_id=group_id,
+                               group_id=group_id, url=url,
                                dates=dates, timestamps=timestamps, ids=ids, objects=objects, objective=int(objective))
 
     else:
         return redirect(url_for('main.home'))
+
+@prf.route("/profile/group/<int:group_id>/<string:objective>/change", methods=["POST"])
+@login_required
+def change_rates_group_update(group_id, objective):
+    if current_user.role == 1:
+        print(request)
+        return request.form
