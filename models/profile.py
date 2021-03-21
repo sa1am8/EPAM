@@ -11,8 +11,14 @@ prf = Blueprint("profile", __name__)
 stamp = 1630454400
 delta = 86400
 
-dates = [datetime.fromtimestamp(i * delta + stamp).strftime('%d.%m') for i in range(25)]
-timestamps = [i * delta + stamp for i in range(25)]
+page = 1
+
+dates = [datetime.fromtimestamp(i * delta + stamp).strftime('%d.%m') for i in range(30 * (page - 1), 30 * page)
+         if datetime.fromtimestamp(i * delta + stamp).strftime('%A') != 'Sunday'
+         and datetime.fromtimestamp(i * delta + stamp).strftime('%A') != 'Saturday']
+timestamps = [i * delta + stamp for i in range(30 * (page - 1), 30 * page)
+                  if datetime.fromtimestamp(i * delta + stamp).strftime('%A') != 'Sunday'
+                  and datetime.fromtimestamp(i * delta + stamp).strftime('%A') != 'Saturday']
 
 
 @prf.route('/profile')
@@ -31,29 +37,51 @@ def profile():
                            title="Profile", groups=groups)
 
 
-@prf.route('/profile/grades')
+@prf.route('/profile/grades/', methods=["GET", "POST"])
 @login_required
 def show_grades():
+    page = 1
+    if 'page' in request.args:
+        page = int(request.args['page'])
     names = object_to_id.query.all()
     grades = Grades.query.filter_by(user_id=current_user.id).all()
     objects = grades_schema.dump(grades)
     rates = {object['object_id']: dict() for object in objects}
-
     for object in objects:
         rates[object['object_id']][object['timestamp']] = object['grade_id'] if object['grade_id'] != 13 else 'Abs'
 
-    return render_template('html/grades.html', dates=dates, names=names,
+    dates = [datetime.fromtimestamp(i * delta + stamp).strftime('%d.%m') for i in range(30 * (page - 1), 30 * page)
+             if datetime.fromtimestamp(i * delta + stamp).strftime('%A') != 'Sunday'
+             and datetime.fromtimestamp(i * delta + stamp).strftime('%A') != 'Saturday']
+    timestamps = [i * delta + stamp for i in range(30 * (page - 1), 30 * page)
+                  if datetime.fromtimestamp(i * delta + stamp).strftime('%A') != 'Sunday'
+                  and datetime.fromtimestamp(i * delta + stamp).strftime('%A') != 'Saturday']
+
+    return render_template('html/grades.html', dates=dates, names=names, page=page,
                            timestamps=timestamps, rates=rates, title='Grades')
 
 
-@prf.route("/profile/group/<int:group_id>/<string:objective>", methods=["GET"])
+@prf.route("/profile/group/<int:group_id>/<string:objective>/", methods=["GET", "POST"])
 @login_required
 def show_group(group_id, objective):
     if current_user.role == 1:
+
+        page = 1
+        if 'page' in request.args:
+            page = int(request.args['page'])
+
+        dates = [datetime.fromtimestamp(i * delta + stamp).strftime('%d.%m') for i in range(30 * (page - 1), 30 * page)
+                 if datetime.fromtimestamp(i * delta + stamp).strftime('%A') != 'Sunday'
+                 and datetime.fromtimestamp(i * delta + stamp).strftime('%A') != 'Saturday']
+        timestamps = [i * delta + stamp for i in range(30 * (page - 1), 30 * page)
+                      if datetime.fromtimestamp(i * delta + stamp).strftime('%A') != 'Sunday'
+                      and datetime.fromtimestamp(i * delta + stamp).strftime('%A') != 'Saturday']
+
         group = User.query.filter_by(group=group_id).all()
         profiles = profiles_schema.dump(group)
         ids = [i['name'] for i in profiles]
         results = dict()
+
         for i in profiles:
             grades = Grades.query.filter_by(user_id=i['id']).all()
             objects = grades_schema.dump(grades)
@@ -62,14 +90,19 @@ def show_group(group_id, objective):
                 grades[object['object_id']][object['timestamp']] = object['grade_id'] \
                     if object['grade_id'] != 13 else 'Abs'
             results[i['id']] = grades
+
         objects = objects_schema.dump(object_to_id.query.all())
         ids.reverse()
+
         for i in objects:
+
             if i['name'].lower() == objective.lower():
-                objective = i['id']
+                objective_id = i['id']
                 break
+
         return render_template('html/group.html', title=str(group_id) + ' group', users=results, group_id=group_id,
-                               dates=dates, timestamps=timestamps, ids=ids, objects=objects, objective=objective)
+                               dates=dates, timestamps=timestamps, ids=ids, objects=objects, objective=objective,
+                               objective_id=int(objective_id), page=page)
     else:
         return redirect(url_for('main.home'))
 
@@ -79,9 +112,11 @@ def show_group(group_id, objective):
 def change_rates_group(group_id, objective):
     if current_user.role == 1:
         group = User.query.filter_by(group=group_id).all()
+
         profiles = profiles_schema.dump(group)
         ids = [i['name'] for i in profiles]
         results = dict()
+
         for i in profiles:
             grades = Grades.query.filter_by(user_id=i['id']).all()
             objects = grades_schema.dump(grades)
@@ -92,21 +127,74 @@ def change_rates_group(group_id, objective):
             results[i['id']] = grades
         objects = objects_schema.dump(object_to_id.query.all())
         ids.reverse()
+
         for i in objects:
             if i['name'].lower() == objective.lower():
-                objective = i['id']
+                objective_id = i['id']
                 break
         url = '/profile/group/{}/{}/change'.format(group_id, objective)
+
         return render_template('html/group_changes.html', title=str(group_id) + ' group', users=results,
-                               group_id=group_id, url=url,
-                               dates=dates, timestamps=timestamps, ids=ids, objects=objects, objective=int(objective))
+                               objective=objective, group_id=group_id, url=url,  # object_name=object_name,
+                               dates=dates, timestamps=timestamps, ids=ids, objects=objects,
+                               objective_id=int(objective_id))
 
     else:
         return redirect(url_for('main.home'))
+
 
 @prf.route("/profile/group/<int:group_id>/<string:objective>/change", methods=["POST"])
 @login_required
 def change_rates_group_update(group_id, objective):
     if current_user.role == 1:
-        print(request)
-        return request.form
+        objective_id = objective
+        group = User.query.filter_by(group=group_id).all()
+        profiles = profiles_schema.dump(group)
+        ids = [i['name'] for i in profiles]
+
+        # object_name = {i.id : i.name for i in object_to_id.query.all()}[int(objective)]
+        results_origin = dict()
+        for i in profiles:
+            grades = Grades.query.filter_by(user_id=i['id']).all()
+            objects = grades_schema.dump(grades)
+            grades = {object['object_id']: dict() for object in objects}
+            for object in objects:
+                grades[object['object_id']][object['timestamp']] = object['grade_id'] \
+                    if object['grade_id'] != 13 else 'Abs'
+            results_origin[i['id']] = grades
+        objects = objects_schema.dump(object_to_id.query.all())
+        for i in objects:
+
+            if i['name'].lower() == objective.lower():
+                objective_id = i['id']
+                break
+
+        ids.reverse()
+        results = request.form
+        for i in results:
+            j = i
+            i = i.replace('grade_input', '')
+            user_id, time = i.split('_')[0], i.split('_')[1]
+            rate = results[j] if results[j] != 'Abs' else 13
+            grade = Grades.query.filter_by(user_id=user_id, timestamp=time,
+                                           object_id=objective_id).first()
+
+            if not grade:
+                if rate != "-":
+                    grade = Grades(user_id=user_id, object_id=objective_id, grade_id=rate, timestamp=time)
+                    db.session.add(grade)
+
+            else:
+                if rate == "-":
+                    db.session.delete(grade)
+
+                else:
+                    grade.grade_id = rate
+
+            db.session.commit()
+
+        url = '/profile/group/{}/{}/change'.format(group_id, objective)
+
+        return redirect(url_for('profile.show_group', group_id=group_id, objective=objective))
+    else:
+        return redirect(url_for('main.home'))

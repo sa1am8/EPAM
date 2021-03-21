@@ -29,4 +29,6 @@ table{
 
         </thead>
 </table>
+<a class="btn btn-secondary btn-sm" href="{{ url_for('profile.show_grades', page=page-1)}}"> << </a>
+<a class="btn btn-secondary btn-sm" href="{{ url_for('profile.show_grades', page=page+1)}}"> >> </a>
 {% endblock %}

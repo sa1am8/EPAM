@@ -33,10 +33,12 @@ table{
             <tr>
             <th> {{ ids.pop() }}</th>
             {% for time in timestamps %}
-                <th> {{ users.get(user, {}).get(objective, {}).get(time, '-') }}</th>
+                <th> {{ users.get(user, {}).get(objective_id, {}).get(time, '-') }}</th>
             {% endfor %}
             </tr>
         {% endfor %}
         </thead>
 </table>
+<a class="btn btn-secondary btn-sm" href="{{ url_for('profile.show_group', group_id=group_id, objective=objective, page=page-1)}}"> << </a>
+<a class="btn btn-secondary btn-sm" href="{{ url_for('profile.show_group', group_id=group_id, objective=objective, page=page+1)}}"> >> </a>
 {% endblock %}
