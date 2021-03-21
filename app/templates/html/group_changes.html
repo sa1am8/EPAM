@@ -1,13 +1,7 @@
 {% extends "/html/index.html" %}
 
 {% block content %}
-<style>
-table{
-    margin-top : 5%;
-    margin-right: 25%;
-    margin-left: -50%;
-    }
-</style>
+
 <form id="objects" method="POST">
     <select id="objects_list" style="margin-top : 5%; margin-left : -45%" onchange="document.location=this.options[this.selectedIndex].value">
         <option id="select" value="select" disabled="" selected="">Please Select</option>

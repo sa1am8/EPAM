@@ -14,6 +14,7 @@ def login_post():
     remember = True if request.form.get('remember') else False
 
     user = User.query.filter_by(email=email).first()
+
     if not user or not check_password_hash(user.password, password):
         flash('Please check your login details and try again.')
         return redirect(url_for('auth.login_post'))
@@ -41,8 +42,12 @@ def logout():
 @auth.route('/signup', methods=['POST'])
 def signup_post():
     email = request.form.get('email')
+    if '@sliceum.com' not in email:
+        flash('Email address must contain @sliceum.com')
+        return redirect(url_for('auth.signup'))
     name = request.form.get('name')
     password = request.form.get('password')
+    group = request.form.get('group')
 
     user = User.query.filter_by(email=email).first()
 
@@ -50,7 +55,7 @@ def signup_post():
         flash('Email address already exists')
         return redirect(url_for('auth.signup'))
 
-    new_user = User(email=email, name=name, password=generate_password_hash(password, method='sha256'))
+    new_user = User(email=email, name=name, group=group, password=generate_password_hash(password, method='sha256'))
 
     db.session.add(new_user)
     db.session.commit()

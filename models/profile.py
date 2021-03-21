@@ -10,15 +10,37 @@ prf = Blueprint("profile", __name__)
 
 stamp = 1630454400
 delta = 86400
-
+days_per_page = 28
 page = 1
 
-dates = [datetime.fromtimestamp(i * delta + stamp).strftime('%d.%m') for i in range(30 * (page - 1), 30 * page)
-         if datetime.fromtimestamp(i * delta + stamp).strftime('%A') != 'Sunday'
-         and datetime.fromtimestamp(i * delta + stamp).strftime('%A') != 'Saturday']
-timestamps = [i * delta + stamp for i in range(30 * (page - 1), 30 * page)
-                  if datetime.fromtimestamp(i * delta + stamp).strftime('%A') != 'Sunday'
-                  and datetime.fromtimestamp(i * delta + stamp).strftime('%A') != 'Saturday']
+
+def generate_dates_and_timestamps(page):
+    dates, i, count = list(), days_per_page * (page - 1), days_per_page * (page - 1)
+    while count < days_per_page * page:
+        if datetime.fromtimestamp(i * delta + stamp).strftime('%A') == 'Sunday':
+            i += 1
+        elif datetime.fromtimestamp(i * delta + stamp).strftime('%A') == 'Saturday':
+            i += 2
+        else:
+            dates.append(datetime.fromtimestamp(i * delta + stamp).strftime('%d.%m'))
+            count += 1
+            i += 1
+
+    timestamps, i, count = list(), days_per_page * (page - 1), days_per_page * (page - 1)
+    while count < days_per_page * page:
+        if datetime.fromtimestamp(i * delta + stamp).strftime('%A') == 'Sunday':
+            i += 1
+        elif datetime.fromtimestamp(i * delta + stamp).strftime('%A') == 'Saturday':
+            i += 2
+        else:
+            timestamps.append(i * delta + stamp)
+            i += 1
+            count += 1
+    return dates, timestamps
+
+
+_ = generate_dates_and_timestamps(page)
+dates, timestamps = _[0], _[1]
 
 
 @prf.route('/profile')
@@ -50,12 +72,8 @@ def show_grades():
     for object in objects:
         rates[object['object_id']][object['timestamp']] = object['grade_id'] if object['grade_id'] != 13 else 'Abs'
 
-    dates = [datetime.fromtimestamp(i * delta + stamp).strftime('%d.%m') for i in range(30 * (page - 1), 30 * page)
-             if datetime.fromtimestamp(i * delta + stamp).strftime('%A') != 'Sunday'
-             and datetime.fromtimestamp(i * delta + stamp).strftime('%A') != 'Saturday']
-    timestamps = [i * delta + stamp for i in range(30 * (page - 1), 30 * page)
-                  if datetime.fromtimestamp(i * delta + stamp).strftime('%A') != 'Sunday'
-                  and datetime.fromtimestamp(i * delta + stamp).strftime('%A') != 'Saturday']
+    _ = generate_dates_and_timestamps(page)
+    dates, timestamps = _[0], _[1]
 
     return render_template('html/grades.html', dates=dates, names=names, page=page,
                            timestamps=timestamps, rates=rates, title='Grades')
@@ -70,12 +88,8 @@ def show_group(group_id, objective):
         if 'page' in request.args:
             page = int(request.args['page'])
 
-        dates = [datetime.fromtimestamp(i * delta + stamp).strftime('%d.%m') for i in range(30 * (page - 1), 30 * page)
-                 if datetime.fromtimestamp(i * delta + stamp).strftime('%A') != 'Sunday'
-                 and datetime.fromtimestamp(i * delta + stamp).strftime('%A') != 'Saturday']
-        timestamps = [i * delta + stamp for i in range(30 * (page - 1), 30 * page)
-                      if datetime.fromtimestamp(i * delta + stamp).strftime('%A') != 'Sunday'
-                      and datetime.fromtimestamp(i * delta + stamp).strftime('%A') != 'Saturday']
+        _ = generate_dates_and_timestamps(page)
+        dates, timestamps = _[0], _[1]
 
         group = User.query.filter_by(group=group_id).all()
         profiles = profiles_schema.dump(group)

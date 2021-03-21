@@ -12,9 +12,10 @@ from flask_login import LoginManager
 
 project_root = os.path.dirname(__file__)
 template_path = os.path.join(project_root, 'templates/')
+static_path = os.path.join(project_root, 'static/')
 
 db = SQLAlchemy()
-app = Flask(__name__, instance_relative_config=True, template_folder=template_path)
+app = Flask(__name__, instance_relative_config=True, template_folder=template_path, static_folder=static_path)
 app.config.from_object(Config)
 app.config.from_pyfile('/home/toshka/PycharmProjects/EPAM linux/EPAM/instance/config.py')
 db = SQLAlchemy(app)
@@ -31,6 +32,7 @@ login_manager.init_app(app)
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
 
 if __name__ == '__main__':
     import sys
