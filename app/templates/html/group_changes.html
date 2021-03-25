@@ -3,7 +3,7 @@
 {% block content %}
 
 <form id="objects" method="POST">
-    <select id="objects_list" style="margin-top : 5%; margin-left : -45%" onchange="document.location=this.options[this.selectedIndex].value">
+    <select id="objects_list" style="margin-top : 5%; margin-left : -45%" onchange="document.location = 'http://127.0.0.1:5000/profile/group/32/' + this.options[this.selectedIndex].value">
         <option id="select" value="select" disabled="" selected="">Please Select</option>
         {% for object in objects %}
             <option value="{{ object.name }}"> {{ object.name }} </option>

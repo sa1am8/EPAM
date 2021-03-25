@@ -62,6 +62,8 @@ def profile():
 @prf.route('/profile/grades/', methods=["GET", "POST"])
 @login_required
 def show_grades():
+    if request.method == 'POST':
+        print(request.data)
     page = 1
     if 'page' in request.args:
         page = int(request.args['page'])
@@ -83,7 +85,6 @@ def show_grades():
 @login_required
 def show_group(group_id, objective):
     if current_user.role == 1:
-
         page = 1
         if 'page' in request.args:
             page = int(request.args['page'])
