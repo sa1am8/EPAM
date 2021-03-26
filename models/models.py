@@ -64,7 +64,7 @@ class Grades(db.Model):
     timestamp = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
-        return '<Post %r>' % (self.id)
+        return '<Grade %r>' % (self.id)
 
 
 class object_to_id(db.Model):
@@ -72,3 +72,28 @@ class object_to_id(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String)
+
+
+class Images(db.Model):
+    __tablename__ = "images"
+
+    id = db.Column(db.Integer, nullable=False, primary_key=True, autoincrement=True, unique=True)
+    name = db.Column(db.String, nullable=False)
+    path = db.Column(db.String, nullable=False)
+    size = db.Column(db.String, nullable=False)
+
+    def __repr__(self):
+        return '<id:path> : {1}:{2}'.format(self.id, self.path)
+
+
+class Posts(db.Model):
+    __tablename__ = "posts"
+
+    id = db.Column(db.Integer, nullable=False, primary_key=True, autoincrement=True, unique=True)
+    text = db.Column(db.String)
+    images = db.Column(db.String)
+    time = db.Column(db.String, nullable=False)
+    author = db.Column(db.String, nullable=False)
+
+    def __repr__(self):
+        return '<Post %r>' % (self.id)
