@@ -26,8 +26,7 @@ login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
 login_manager.init_app(app)
 
-from main import main
-app.register_blueprint(main)
+
 
 
 @login_manager.user_loader
@@ -43,10 +42,12 @@ if __name__ == "__main__":
     from models.profile import prf
     from api.views import api
     from api.auth import auth
+    from main import main
     from flask_login import LoginManager
 
     db.init_app(app)
 
+    app.register_blueprint(main)
     app.register_blueprint(api)
     app.register_blueprint(auth)
     app.register_blueprint(prf)

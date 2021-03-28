@@ -83,7 +83,7 @@ class Images(db.Model):
     size = db.Column(db.String, nullable=False)
 
     def __repr__(self):
-        return '<id:path> : {1}:{2}'.format(self.id, self.path)
+        return '<id:path> : {0}:{1}'.format(self.id, self.path)
 
 
 class Posts(db.Model):
