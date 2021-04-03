@@ -1,1 +1,1 @@
-# Graduation Work by Anton "kraych" Saltykov
+# Graduation Work by Anton "sa1am8" Saltykov
