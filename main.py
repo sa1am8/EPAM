@@ -27,6 +27,7 @@ info = """Структура 2020/2021 навчального року
 def home():
     """Render home page"""
     posts = Posts.query.order_by("time").all()
+    posts.reverse()
     images_in_posts = [i.images.split(' ') for i in posts]
     images_dict = dict()
     for images_in_post in images_in_posts:

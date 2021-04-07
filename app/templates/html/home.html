@@ -6,11 +6,17 @@
     </style>
     <h1>Homepage</h1>
     {% for i in posts %}
-      <p>{{i.text}}</p>
-      <p><img src="/static/images/{{images[i.images]}}" alt="lorem"></p>
-    <div class="author-{{i.author}}" style="text-align: right">
+    <div class="author-{{i.author}}" style="text-align: left">
       <small> {{i.author}}</small>
     </div>
+      <hr align="center" width="1000" size="2" color="#ff0000" />
+      <p>{{i.text}}</p>
+      {% for j in i.images %}
+        {% if j != ' ' %}
+          <p><img src="/static/images/{{images[j]}}" alt="lorem" width="300" height="300"></p>
+        {% endif %}
+      {% endfor %}
+     <hr align="center" width="1000" size="2" color="#ff0000" />
     {% endfor %}
   </div>
 {% endblock %}
